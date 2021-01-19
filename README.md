@@ -46,23 +46,8 @@ git pull
 
 ```
 
-## Specify the driver levels
-
-First check the latest clients available in the official [Snowflake documentation](https://docs.snowflake.net/manuals/release-notes/client-change-log.html#client-changes-by-version)
-
-Once you have chosen the versions, you can customize the line 26 in the Dockerfile. For example:
-
-```
-RUN odbc_version=2.21.1 jdbc_version=3.12.3 spark_version=2.7.0-spark_2.4 snowsql_version=1.2.5 /deploy_snowflake.sh
-```
-
-**NOTE: SnowSQL CLI has the ability to [auto-upgrade](https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#label-understanding-auto-upgrades) to the latest version available. So, you may not need to specify a higher version.**
-
 ## Build Snowtire docker image
 
-```
-docker build --pull -t snowtire .
-```
 You may get some warnings which are non critical, and/or expected. You can safely ignore them:
 ```
 ...
@@ -85,6 +70,29 @@ You should see the following message at the very end:
 ```
 Successfully tagged snowtire:latest
 ```
+
+### Default drivers, connectors and scala kernel levels
+```
+docker build --pull -t snowtire .
+```
+### Specify the driver levels while building
+
+First check the latest clients available in the official [Snowflake documentation](https://docs.snowflake.net/manuals/release-notes/client-change-log.html#client-changes-by-version)
+
+Once you have chosen the versions, you can pass the different versions as arguments in the docker build command:
+
+```
+docker build --pull -t snowtire . \
+--build-arg odbc_version=2.21.8 \
+--build-arg jdbc_version=3.12.10 \
+--build-arg spark_version=2.8.1-spark_2.4 \
+--build-arg snowsql_version=1.2.9 \
+--build-arg almond_version=0.10.0 \
+--build-arg scala_version=2.12.11 
+```
+
+**NOTE: SnowSQL CLI has the ability to [auto-upgrade](https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#label-understanding-auto-upgrades) to the latest version available. So, you may not need to specify a higher version.**
+
 
 ## Running the image
 ```
