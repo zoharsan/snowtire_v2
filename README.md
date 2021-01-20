@@ -48,28 +48,7 @@ git pull
 
 ## Build Snowtire docker image
 
-You may get some warnings which are non critical, and/or expected. You can safely ignore them:
-```
-...
-debconf: delaying package configuration, since apt-utils is not installed
-...
-==> WARNING: A newer version of conda exists. <==
-  current version: 4.6.14
-  latest version: 4.7.5
-
-Please update conda by running
-
-    $ conda update -n base conda
-...
-grep: /etc/odbcinst.ini: No such file or directory
-...
-grep: /etc/odbc.ini: No such file or directory
-```
-
-You should see the following message at the very end:
-```
-Successfully tagged snowtire:latest
-```
+There are two ways to build the image, either with the default levels, or by specifying actual driver levels while building.
 
 ### Default drivers, connectors and scala kernel levels
 
@@ -97,6 +76,30 @@ docker build --pull -t snowtire . \
 
 **NOTE: SnowSQL CLI has the ability to [auto-upgrade](https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#label-understanding-auto-upgrades) to the latest version available. So, you may not need to specify a higher version.**
 
+### Build completion
+
+You may get some warnings which are non critical, and/or expected. You can safely ignore them:
+```
+...
+debconf: delaying package configuration, since apt-utils is not installed
+...
+==> WARNING: A newer version of conda exists. <==
+  current version: 4.6.14
+  latest version: 4.7.5
+
+Please update conda by running
+
+    $ conda update -n base conda
+...
+grep: /etc/odbcinst.ini: No such file or directory
+...
+grep: /etc/odbc.ini: No such file or directory
+```
+
+You should see the following message at the very end:
+```
+Successfully tagged snowtire:latest
+```
 
 ## Running the image
 ```
