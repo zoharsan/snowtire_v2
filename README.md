@@ -35,7 +35,7 @@ Change the Directory to a location where you are storing your Docker images:
 ```
 mkdir DockerImages
 cd DockerImages
-git clone https://github.com/zoharsan/snowtire.git
+git clone https://github.com/zoharsan/stv2_beta.git
 cd snowtire
 ```
 
@@ -72,9 +72,13 @@ Successfully tagged snowtire:latest
 ```
 
 ### Default drivers, connectors and scala kernel levels
+
+The default levels are specified in the Docker file (lines starting with ARG). These levels are refreshed on a best level basis, and have been sanity tested. If you are satisfied with these levels, you can simply run the following command:
+
 ```
 docker build --pull -t snowtire .
 ```
+
 ### Specify the driver levels while building
 
 First check the latest clients available in the official [Snowflake documentation](https://docs.snowflake.net/manuals/release-notes/client-change-log.html#client-changes-by-version)
