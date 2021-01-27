@@ -23,10 +23,13 @@ ARG snowsql_version=1.2.10
 RUN apt-get update && \
     apt-get install -y apt-utils && \
     apt-get install -y libssl-dev libffi-dev && \
-    apt-get install -y vim
+    apt-get install -y vim && \
+    apt-get install -y openjdk-8-jdk
 RUN sudo -u jovyan /opt/conda/bin/curl -Lo coursier https://git.io/coursier-cli
 RUN chown -R jovyan:users /home/jovyan/coursier && chmod +x /home/jovyan/coursier
 RUN sudo -u jovyan /home/jovyan/coursier launch --fork almond:$almond_version --scala $scala_kernel_version -- --install
+COPY ./kernel.json /home/jovyan/.local/share/jupyter/kernels/scala/
+RUN chown jovyan:users /home/jovyan/.local/share/jupyter/kernels/scala/kernel.json
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade pip
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade pyarrow
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade snowflake-connector-python[pandas]

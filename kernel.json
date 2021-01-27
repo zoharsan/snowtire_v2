@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "java",
+    "-jar",
+    "/home/jovyan/.local/share/jupyter/kernels/scala/launcher.jar",
+    "--connection-file",
+    "{connection_file}"
+  ],
+  "display_name": "Scala",
+  "language": "scala",
+  "env": {"JAVA_HOME": "/usr/lib/jvm/java-8-openjdk-amd64"}
+}
