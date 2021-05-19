@@ -16,10 +16,10 @@ FROM jupyter/all-spark-notebook:1c8073a927aa
 USER root
 ARG almond_version=0.10.9
 ARG scala_kernel_version=2.12.11
-ARG odbc_version=2.22.3
-ARG jdbc_version=3.12.16
-ARG spark_version=2.8.3
-ARG snowsql_version=1.2.10
+ARG odbc_version=2.23.2
+ARG jdbc_version=3.13.3
+ARG spark_version=2.8.5-spark_2.4
+ARG snowsql_version=1.2.14
 RUN apt-get update && \
     apt-get install -y apt-utils && \
     apt-get install -y libssl-dev libffi-dev && \
