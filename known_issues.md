@@ -1,5 +1,12 @@
 # Known issues / Change Log / Gotchas
 
+#### 2021-05-19
+- ZN: Upgraded to JDK 11
+
+#### 2021-05-18
+- ZN: Fixed spark version in Dockerfile causing issues downloading Spark Driver
+- ZN: Tested latest drivers as of to date and updated Dockerfile.
+
 #### 2020-09-14
 - ZN: Tested latest drivers as of to date and updated Dockerfile.
 - ZN: Fixed line 26 to remove libpq-dev to prevent the following error:
