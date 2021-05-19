@@ -8,5 +8,5 @@
   ],
   "display_name": "Scala",
   "language": "scala",
-  "env": {"JAVA_HOME": "/usr/lib/jvm/java-8-openjdk-amd64"}
+  "env": {"JAVA_HOME": "/usr/lib/jvm/java-11-openjdk-amd64"}
 }
