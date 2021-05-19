@@ -221,6 +221,106 @@ Make sure you have enough memory allocated for your Docker Workstation, at least
 - Click on Apply & Restart.
 
 ---
+#### Failure to connect to Snowflake when Snowflake URI has underscores "_" ####
+
+Due to a [JDK Bug](https://bugs.openjdk.java.net/browse/JDK-8221675) in JDK 8, JDBC connection in Spark or Snowpark may fail with the following stack:
+
+```
+net.snowflake.client.jdbc.SnowflakeSQLException: JDBC driver encountered communication error. Message: Exception encountered for HTTP request: Remote host terminated the handshake.
+net.snowflake.client.jdbc.RestRequest.execute(RestRequest.java:284)
+net.snowflake.client.core.HttpUtil.executeRequestInternal(HttpUtil.java:496)
+net.snowflake.client.core.HttpUtil.executeRequest(HttpUtil.java:441)
+net.snowflake.client.core.HttpUtil.executeGeneralRequest(HttpUtil.java:408)
+net.snowflake.client.core.SessionUtil.newSession(SessionUtil.java:574)
+net.snowflake.client.core.SessionUtil.openSession(SessionUtil.java:279)
+net.snowflake.client.core.SFSession.open(SFSession.java:435)
+net.snowflake.client.jdbc.DefaultSFConnectionHandler.initialize(DefaultSFConnectionHandler.java:103)
+net.snowflake.client.jdbc.DefaultSFConnectionHandler.initializeConnection(DefaultSFConnectionHandler.java:79)
+net.snowflake.client.jdbc.SnowflakeConnectionV1.initConnectionWithImpl(SnowflakeConnectionV1.java:116)
+net.snowflake.client.jdbc.SnowflakeConnectionV1.<init>(SnowflakeConnectionV1.java:96)
+com.snowflake.snowpark.internal.ServerConnection.$anonfun$connection$1(ServerConnection.scala:132)
+scala.Option.getOrElse(Option.scala:189)
+com.snowflake.snowpark.internal.ServerConnection.<init>(ServerConnection.scala:130)
+com.snowflake.snowpark.internal.ServerConnection$.apply(ServerConnection.scala:23)
+com.snowflake.snowpark.Session$SessionBuilder.createInternal(Session.scala:896)
+com.snowflake.snowpark.Session$SessionBuilder.create(Session.scala:884)
+ammonite.$sess.cmd2$Helper.<init>(cmd2.sc:6)
+ammonite.$sess.cmd2$.<init>(cmd2.sc:7)
+ammonite.$sess.cmd2$.<clinit>(cmd2.sc:-1)
+javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake
+sun.security.ssl.SSLSocketImpl.handleEOF(SSLSocketImpl.java:1310)
+sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1151)
+sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1054)
+sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:394)
+net.snowflake.client.jdbc.internal.apache.http.conn.ssl.SSLConnectionSocketFactory.createLayeredSocket(SSLConnectionSocketFactory.java:436)
+net.snowflake.client.jdbc.internal.apache.http.conn.ssl.SSLConnectionSocketFactory.connectSocket(SSLConnectionSocketFactory.java:384)
+net.snowflake.client.jdbc.internal.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:142)
+net.snowflake.client.jdbc.internal.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)
+net.snowflake.client.jdbc.internal.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)
+net.snowflake.client.jdbc.internal.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236)
+net.snowflake.client.jdbc.internal.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+net.snowflake.client.jdbc.internal.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+net.snowflake.client.jdbc.internal.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+net.snowflake.client.jdbc.internal.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+net.snowflake.client.jdbc.internal.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+net.snowflake.client.jdbc.internal.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:108)
+net.snowflake.client.jdbc.RestRequest.execute(RestRequest.java:160)
+net.snowflake.client.core.HttpUtil.executeRequestInternal(HttpUtil.java:496)
+net.snowflake.client.core.HttpUtil.executeRequest(HttpUtil.java:441)
+net.snowflake.client.core.HttpUtil.executeGeneralRequest(HttpUtil.java:408)
+net.snowflake.client.core.SessionUtil.newSession(SessionUtil.java:574)
+net.snowflake.client.core.SessionUtil.openSession(SessionUtil.java:279)
+net.snowflake.client.core.SFSession.open(SFSession.java:435)
+```
+
+When using Snowpark, please upgrade to the latest Docker container (Updated May 19 2021) which upgrades the JDK to JDK 11. However, Spark 2.4 version doesn't support JDK 11 and is using JDK 8 within the docker. In order to circumvent this issue, replace underscores with dashes as follows:
+
+It may fail if your URL is:
+```https://ca_acme.ca-central-1.aws.snowflakecomputing.com/```
+You can replace it with to make it work:
+```https://ca-acme.ca-central-1.aws.snowflakecomputing.com/```
+
+This workaround is also valid with Snowpark.
+
+#### Spark Notebook fail when using JDK 11 ####
+
+The May 19 update of Snowtire installs JDK 11, which is incompatible with Spark 2.4. You may see the following stack when trying to run your spark notebooks:
+
+```
+y4JJavaError: An error occurred while calling o84.showString.
+: java.lang.IllegalArgumentException: Unsupported class file major version 55
+	at org.apache.xbean.asm6.ClassReader.<init>(ClassReader.java:166)
+	at org.apache.xbean.asm6.ClassReader.<init>(ClassReader.java:148)
+	at org.apache.xbean.asm6.ClassReader.<init>(ClassReader.java:136)
+	at org.apache.xbean.asm6.ClassReader.<init>(ClassReader.java:237)
+	at org.apache.spark.util.ClosureCleaner$.getClassReader(ClosureCleaner.scala:49)
+	at org.apache.spark.util.FieldAccessFinder$$anon$3$$anonfun$visitMethodInsn$2.apply(ClosureCleaner.scala:517)
+	at org.apache.spark.util.FieldAccessFinder$$anon$3$$anonfun$visitMethodInsn$2.apply(ClosureCleaner.scala:500)
+	at scala.collection.TraversableLike$WithFilter$$anonfun$foreach$1.apply(TraversableLike.scala:733)
+	at scala.collection.mutable.HashMap$$anon$1$$anonfun$foreach$2.apply(HashMap.scala:134)
+	at scala.collection.mutable.HashMap$$anon$1$$anonfun$foreach$2.apply(HashMap.scala:134)
+	at scala.collection.mutable.HashTable$class.foreachEntry(HashTable.scala:236)
+	at scala.collection.mutable.HashMap.foreachEntry(HashMap.scala:40)
+	at scala.collection.mutable.HashMap$$anon$1.foreach(HashMap.scala:134)
+```
+
+If you see this error, you need to switch the default JDK to JDK 8 using the following command after open a bash session on your container (See instructions above in 'Additional Handy Commands' section):
+
+```
+root@91875ce97fb6:~/work/snowpark# sudo update-alternatives --config java
+  There are 2 choices for the alternative java (providing /usr/bin/java).
+
+    Selection    Path                                            Priority   Status
+  ------------------------------------------------------------
+    0            /usr/lib/jvm/java-11-openjdk-amd64/bin/java      1111      auto mode
+  * 1            /usr/lib/jvm/java-11-openjdk-amd64/bin/java      1111      manual mode
+    2            /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode
+
+  Press <enter> to keep the current choice[*], or type selection number: 2
+```
+
+After doing this, restart the kernel for your notebook to pick-up the JDK 8 and it should work.
+
 #### Python Kernel Dying ####
 
 In case you have the Python kernel dying while running the notebook, and you want to troubleshoot the root cause, please add these lines as your first paragraph of your notebook and execute the paragraph:
