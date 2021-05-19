@@ -24,7 +24,8 @@ RUN apt-get update && \
     apt-get install -y apt-utils && \
     apt-get install -y libssl-dev libffi-dev && \
     apt-get install -y vim && \
-    apt-get install -y openjdk-8-jdk
+    apt-get install -y openjdk-11-jdk
+RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 RUN sudo -u jovyan /opt/conda/bin/curl -Lo coursier https://git.io/coursier-cli
 RUN chown -R jovyan:users /home/jovyan/coursier && chmod +x /home/jovyan/coursier
 RUN sudo -u jovyan /home/jovyan/coursier launch --fork almond:$almond_version --scala $scala_kernel_version -- --install
