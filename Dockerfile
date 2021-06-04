@@ -36,6 +36,8 @@ RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade pyarrow
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade snowflake-connector-python[pandas]
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade snowflake-sqlalchemy
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade plotly
+RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade nbformat
+RUN sudo -u jovyan /opt/conda/bin/python -m pip install jupyter_contrib_nbextensions
 RUN conda install pyodbc
 RUN conda install -c conda-forge jupyterlab-plotly-extension --yes
 RUN apt-get install -y iodbc libiodbc2-dev libssl-dev
@@ -52,3 +54,8 @@ RUN sudo -u jovyan /opt/conda/bin/jupyter trust /home/jovyan/samples/pyodbc.ipyn
 RUN sudo -u jovyan /opt/conda/bin/jupyter trust /home/jovyan/samples/Python.ipynb
 RUN sudo -u jovyan /opt/conda/bin/jupyter trust /home/jovyan/samples/spark.ipynb
 RUN sudo -u jovyan /opt/conda/bin/jupyter trust /home/jovyan/samples/SQLAlchemy.ipynb
+RUN sudo -u jovyan /opt/conda/bin/jupyter contrib nbextension install --user
+RUN sudo -u jovyan /opt/conda/bin/jupyter nbextensions_configurator enable --user
+RUN sudo -u jovyan /opt/conda/bin/jupyter nbextension enable collapsible_headings/main
+RUN sudo -u jovyan /opt/conda/bin/jupyter nbextension enable execute_time/ExecuteTime
+RUN sudo -u jovyan /opt/conda/bin/jupyter nbextension enable codefolding/main
