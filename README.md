@@ -35,8 +35,8 @@ Change the Directory to a location where you are storing your Docker images:
 ```
 mkdir DockerImages
 cd DockerImages
-git clone https://github.com/zoharsan/stv2_beta.git
-cd stv2_beta/
+git clone https://github.com/zoharsan/snowtire_v2.git
+cd snowtire_v2/
 ```
 
 If you are just updating the repository to the latest version (always recommended before building a docker image). Run the following command from within your local clone (under snowtire directory):
