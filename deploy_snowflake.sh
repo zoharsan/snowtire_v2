@@ -6,14 +6,14 @@
 #     - Please check the following URLs for the driver to pick up:
 #         ODBC:  https://sfc-repo.snowflakecomputing.com/odbc/linux/index.html
 #         JDBC:  https://repo1.maven.org/maven2/net/snowflake/snowflake-jdbc/
-#         Spark: https://repo1.maven.org/maven2/net/snowflake/spark-snowflake_2.11
-#         Note: For Spark, the docker currently uses Spark 2.4 with Scala 2.11
+#         Spark: https://repo1.maven.org/maven2/net/snowflake/spark-snowflake_2.12
+#         Note: For Spark, the docker currently uses Spark 3.1.1 with Scala 2.12.10
 
 #!/bin/bash
 
 export odbc_file=${odbc_file:-snowflake_linux_x8664_odbc-${odbc_version}.tgz}
 export jdbc_file=${jdbc_file:-snowflake-jdbc-${jdbc_version}.jar}
-export scala_version=${scala_version:-2.11}
+export scala_version=${scala_version:-2.12}
 export spark_file=${spark_file:-spark-snowflake_${scala_version}-${spark_version}.jar}
 export bootstrap_version=`echo ${snowsql_version}|cut -c -3`
 export snowsql_file=${snowsql_file:-snowsql-${snowsql_version}-linux_x86_64.bash}

@@ -2,8 +2,8 @@
 #         All drivers: https://docs.snowflake.net/manuals/release-notes/client-change-log.html#client-changes-by-version
 #         ODBC:  https://sfc-repo.snowflakecomputing.com/odbc/linux/index.html
 #         JDBC:  https://repo1.maven.org/maven2/net/snowflake/snowflake-jdbc/
-#         Spark: https://repo1.maven.org/maven2/net/snowflake/spark-snowflake_2.11
-#         Note: For Spark, the docker currently uses Spark 2.4 with Scala 2.11
+#         Spark: https://repo1.maven.org/maven2/net/snowflake/spark-snowflake_2.12/
+#         Note: For Spark, the docker currently uses Spark 3.1.1 with Scala 2.12.10
 #    - Update lines 17 to 22 (beginning with ARG) with the correct levels to be deployed which executes deploy_snowflake.sh Script
 #    - For the almond & scala kernel, please check the following link:
 #         https://almond.sh/docs/quick-start-install
@@ -12,18 +12,19 @@
 #
 
 #Start from the following core stack & driver levels versions
-FROM jupyter/all-spark-notebook:1c8073a927aa
+FROM jupyter/all-spark-notebook:spark-3.1.1
 USER root
 ARG almond_version=0.10.9
 ARG scala_kernel_version=2.12.11
-ARG odbc_version=2.23.2
-ARG jdbc_version=3.13.3
-ARG spark_version=2.8.5-spark_2.4
-ARG snowsql_version=1.2.14
+ARG odbc_version=2.23.3
+ARG jdbc_version=3.13.6
+ARG spark_version=2.9.1-spark_3.1
+ARG snowsql_version=1.2.16
 RUN apt-get update && \
     apt-get install -y apt-utils && \
     apt-get install -y libssl-dev libffi-dev && \
     apt-get install -y vim && \
+    apt-get install -y iodbc libiodbc2-dev libssl-dev && \
     apt-get install -y openjdk-11-jdk
 RUN update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
 RUN sudo -u jovyan /opt/conda/bin/curl -Lo coursier https://git.io/coursier-cli
@@ -38,7 +39,6 @@ RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade snowflake-sqla
 RUN sudo -u jovyan /opt/conda/bin/python -m pip install --upgrade plotly
 RUN conda install pyodbc
 RUN conda install -c conda-forge jupyterlab-plotly-extension --yes
-RUN apt-get install -y iodbc libiodbc2-dev libssl-dev
 COPY ./deploy_snowflake.sh /
 RUN chmod +x /deploy_snowflake.sh
 RUN /deploy_snowflake.sh
