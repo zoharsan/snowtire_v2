@@ -24,7 +24,7 @@ RUN apt-get update && \
     apt-get install -y apt-utils && \
     apt-get install -y libssl-dev libffi-dev && \
     apt-get install -y vim && \
-    apt-get install -y iodbc libiodbc2-dev libssl-dev && \
+    apt-get install -y iodbc libiodbc2-dev && \
     apt-get install -y openjdk-11-jdk
 RUN update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
 RUN sudo -u jovyan /opt/conda/bin/curl -Lo coursier https://git.io/coursier-cli
