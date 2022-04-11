@@ -38,3 +38,8 @@ cp ${jdbc_file} /usr/local/spark/jars
 cp ${spark_file} /usr/local/spark/jars
 
 SNOWSQL_DEST=/usr/bin SNOWSQL_LOGIN_SHELL=/home/jovyan/.profile bash /${snowsql_file}
+
+chown -R jovyan:users /home/jovyan/.snowsql
+sudo -u jovyan /usr/bin/snowsql -o log_file=/home/jovyan/.snowsql/snowsql_rt.log -v
+sudo -u jovyan sed -i 's/\.\.\/snowsql_rt.log/~\/\.snowsql\/snowsql_rt.log/g' /home/jovyan/.snowsql/config
+
