@@ -1,5 +1,11 @@
 # Known issues / Change Log / Gotchas
 
+#### 2022-10-05
+- ZN: Overall Image refresh with latest drivers and connectors as of date.
+- ZN: Spark upgrade to Spark 3.3.0
+- ZN: Support for Snowpark for Python through pysnowpark jupyter kernel
+- ZN: Support for Snowpark for Scala through Scala jupyter kernel
+
 #### 2021-05-19
 - ZN: Upgraded to JDK 11
 

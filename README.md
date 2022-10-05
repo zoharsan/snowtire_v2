@@ -1,14 +1,15 @@
 # Introduction
 
-Snowtire v2 is a docker image which aims to provide Snowflake users with a turn key docker environment already set-up with Snowflake drivers of the version of your choice with a comprehensive data science environment including Jupyter Notebooks, Python, Spark, R to experiment the various Snowflake connectors available.
+Icetire is a docker image which aims to provide Snowflake users with a turn key docker environment already set-up with Snowflake drivers of the version of your choice with a comprehensive data science environment including Jupyter Notebooks, Python, Spark, R to experiment the various Snowflake connectors available.
 
-Snowtire v2 now supports Spark 3.1 with Scala 2.12, as well as adds support for the Snowpark API.
+Icetire supports Spark 3.3 with Scala 2.12, as well as adds support for the Snowpark for Scala, and Snowpark for Python API. The following drivers and connectors for Snowflake are provided:
 
 - ODBC
 - JDBC
 - Python Connector
 - Spark Connector
-- SnowSQL Client.
+- SnowSQL Client
+
 
 SQL Alchemy python package is also installed as part of this docker image.
 
@@ -16,7 +17,7 @@ The base docker image is [Jupyter Docker Stacks](https://github.com/jupyter/dock
 
 Please review the [licensing terms](https://raw.githubusercontent.com/jupyter/docker-stacks/master/LICENSE.md) of the above mentioned project.
 
-**NOTE: Snowtire is not officially supported by Snowflake, and is provided as-is.**
+**NOTE: Icetire is not officially supported by Snowflake, and is provided as-is.**
 
 # Prerequisites
 
@@ -25,7 +26,7 @@ Please review the [licensing terms](https://raw.githubusercontent.com/jupyter/do
 
 **NOTE FOR WINDOWS**
 
-On Windows, a common issue encountered is the configuration of line endings, which adds default CRLF Windows line endings to the script deploy_snowflake.sh causing the script to fail. You can either configure [```core.autocrlf```](https://docs.github.com/en/free-pro-team@latest/github/using-git/configuring-git-to-handle-line-endings#refreshing-a-repository-after-changing-line-endings) to ```false```, or use an editor like Notepad+++ to open the deploy_snowflake.sh file and save it in UNIX mode which will convert CRLF line endings into LF before you build the snowtire docker image.
+On Windows, a common issue encountered is the configuration of line endings, which adds default CRLF Windows line endings to the script deploy_snowflake.sh causing the script to fail. You can either configure [```core.autocrlf```](https://docs.github.com/en/free-pro-team@latest/github/using-git/configuring-git-to-handle-line-endings#refreshing-a-repository-after-changing-line-endings) to ```false```, or use an editor like Notepad+++ to open the deploy_snowflake.sh file and save it in UNIX mode which will convert CRLF line endings into LF before you build the Icetire docker image.
 
 
 # Instructions
@@ -37,18 +38,18 @@ Change the Directory to a location where you are storing your Docker images:
 ```
 mkdir DockerImages
 cd DockerImages
-git clone https://github.com/zoharsan/snowtire_v2.git
-cd snowtire_v2/
+git clone https://github.com/Snowflake-Labs/icetire.git
+cd icetire/
 ```
 
-If you are just updating the repository to the latest version (always recommended before building a docker image). Run the following command from within your local clone (under snowtire directory):
+If you are just updating the repository to the latest version (always recommended before building a docker image). Run the following command from within your local clone (under Icetire directory):
 
 ```
 git pull
 
 ```
 
-## Build Snowtire docker image
+## Build Icetire docker image
 
 There are two ways to build the image, either with the default levels, or by specifying actual driver levels while building.
 
@@ -57,7 +58,7 @@ There are two ways to build the image, either with the default levels, or by spe
 The default levels are specified in the Docker file (lines starting with ARG). These levels are refreshed on a best level basis, and have been sanity tested. If you are satisfied with these levels, you can simply run the following command:
 
 ```
-docker build --pull -t snowtire .
+docker build --pull -t icetire .
 ```
 
 ### Specify the driver levels while building
@@ -67,49 +68,31 @@ First check the latest clients available in the official [Snowflake documentatio
 Once you have chosen the versions, you can pass the different versions as arguments in the docker build command:
 
 ```
-docker build --pull -t snowtire . \
+docker build --pull -t icetire . \
 --build-arg odbc_version=2.21.8 \
 --build-arg jdbc_version=3.12.10 \
 --build-arg spark_version=2.8.1-spark_2.4 \
 --build-arg snowsql_version=1.2.9 \
 --build-arg almond_version=0.10.0 \
---build-arg scala_version=2.12.11 
+--build-arg scala_version=2.12.11
 ```
 
 **NOTE: SnowSQL CLI has the ability to [auto-upgrade](https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#label-understanding-auto-upgrades) to the latest version available. So, you may not need to specify a higher version.**
 
 ### Build completion
 
-You may get some warnings which are non critical, and/or expected. You can safely ignore them:
-```
-...
-debconf: delaying package configuration, since apt-utils is not installed
-...
-==> WARNING: A newer version of conda exists. <==
-  current version: 4.6.14
-  latest version: 4.7.5
-
-Please update conda by running
-
-    $ conda update -n base conda
-...
-grep: /etc/odbcinst.ini: No such file or directory
-...
-grep: /etc/odbc.ini: No such file or directory
-```
-
 You should see the following message at the very end:
 ```
-Successfully tagged snowtire:latest
+Successfully tagged icetire:latest
 ```
 
 ## Running the image
 ```
-docker run -p 8888:8888 --name spare-0 snowtire:latest
+docker run -p 8888:8888 --name spare-0 icetire:latest
 ```
 If the port 8888 is already taken on your laptop, and you want to use another port, you can simply change the port mapping. For example, for port 9999, it would be:
 ```
-docker run -p 9999:8888 --name spare-1 snowtire:latest
+docker run -p 9999:8888 --name spare-1 icetire:latest
 ```
 
 You should see a message like the following the very first time you bring up this image. Copy the token value in the URL:
@@ -121,8 +104,8 @@ You should see a message like the following the very first time you bring up thi
 [I 23:33:43.822 NotebookApp] The Jupyter Notebook is running at:
 [I 23:33:43.822 NotebookApp] http://(a8e53cbad3a0 or 127.0.0.1):8888/?token=eb2222f1a8cd14046ecc5177d4b1b5965446e3c34b8f42ad
 [I 23:33:43.822 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 23:33:43.826 NotebookApp] 
-    
+[C 23:33:43.826 NotebookApp]
+
     To access the notebook, open this file in a browser:
         file:///home/jovyan/.local/share/jupyter/runtime/nbserver-17-open.html
     Or copy and paste one of these URLs:
@@ -136,19 +119,19 @@ You should see a message like the following the very first time you bring up thi
   ```
   docker logs spare-0 --tail 10
   ```
- 
+
  - Open a bash session on the docker container
- 
+
  ```
  docker exec -it spare-0 /bin/bash
  ```
- 
+
  Then run the following command:
- 
+
  ```
  jupyter notebook list
  ```
- 
+
 ## Accessing the image
 
 Open a web browser on: http://localhost:8888
@@ -157,7 +140,7 @@ It will prompt you for a Password or token. Enter the token you have in the prev
 
 ## Working with the image
 
-Snowtire come with 4 different small examples of python notebooks allowing to test various connectors including odbc, jdbc, spark. You will need to customize your Snowflake account name, your credentials (user/password), database name and warehouse.
+Icetire come with 4 different small examples of python notebooks allowing to test various connectors including odbc, jdbc, spark. You will need to customize your Snowflake account name, your credentials (user/password), database name and warehouse.
 
 You can always upload to the jupyter environment any demo notebook from the main interface. See the Upload button at the top right:
 
@@ -286,7 +269,7 @@ This workaround is also valid with Snowpark.
 
 #### Spark Notebook fail when using JDK 11 ####
 
-The May 19 update of Snowtire installs JDK 11, which is incompatible with Spark 2.4. You may see the following stack when trying to run your spark notebooks:
+The May 19 update of Icetire installs JDK 11, which is incompatible with Spark 2.4. You may see the following stack when trying to run your spark notebooks:
 
 ```
 y4JJavaError: An error occurred while calling o84.showString.
@@ -331,7 +314,7 @@ In case you have the Python kernel dying while running the notebook, and you wan
 
 import logging
 import os
-  
+
 for logger_name in ['snowflake','botocore','azure']:
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
@@ -371,4 +354,4 @@ This is caused by Windows CRLF line ending special characters added to the deplo
 ---
 #### Known Issues Log ####
 
-Please check [known issues](known_issues.md) log for known issues with Snowtire. 
+Please check [known issues](known_issues.md) log for known issues with Icetire.
